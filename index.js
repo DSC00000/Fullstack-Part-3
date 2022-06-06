@@ -4,11 +4,14 @@ const req = require('express/lib/request')
 const app = express()
 var morgan = require('morgan')
 
+/******** Get thangs goin' ********/
 app.use(express.json())
 app.use(morgan('tiny'))
 
+/******** I do declare, it is X o'clock ********/
 let date_time = new Date()
 
+/******** The Phonebook *********/
 let persons = [
     { 
         "id": 1,
@@ -41,6 +44,7 @@ const generateId = () => {
   return maxId + 1
 }
 
+/********** Static Pages *********/
 app.get('/', (request, response) => {
     response.send('<h1>Visit /api/persons to see the phonebook, or /info to check the phonebook stats!</h1>')
 })
@@ -49,7 +53,7 @@ app.get('/info', (request, response) => {
     response.send(`Phonebook has info for ${persons.length} people.` + '\n' + `${date_time}`)
 })
 
-/********** /API/PERSONS **********/
+/********** /api/persons stuff **********/
 app.get('/api/persons', (request, response) => {
     response.json(persons)
 })
@@ -98,7 +102,7 @@ const unknownEndpoint = (request, response) => {
 
 app.use(unknownEndpoint)
 
-/********* Listen ********/
+/********* Hey! Listen! ********/
 const PORT = 8000
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
