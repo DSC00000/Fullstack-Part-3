@@ -1,5 +1,10 @@
+const { request } = require('express')
 const express = require('express')
+const req = require('express/lib/request')
 const app = express()
+
+app.use(express.json())
+
 let date_time = new Date()
 
 let persons = [
@@ -33,8 +38,15 @@ app.get('/info', (request, response) => {
     response.send(`Phonebook has info for ${persons.length} people.` + '\n' + `${date_time}`)
 })
 
+/********** /API/PERSONS **********/
 app.get('/api/persons', (request, response) => {
     response.json(persons)
+})
+
+app.post('api/persons', (request, response) => {
+  const person = request.body
+  console.log(person)
+  response.json(person)
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -47,6 +59,13 @@ app.get('/api/persons/:id', (request, response) => {
       response.status(404).end()
     }
   })
+
+app.delete('/api/persons/:id', (request, response) => {
+  const id = Number(request.params.id)
+  persons = persons.filter(person => person.id !== id)
+
+  response.status(204).end()
+})
 
 const PORT = 3001
 app.listen(PORT, () => {
