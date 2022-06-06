@@ -2,8 +2,10 @@ const { request } = require('express')
 const express = require('express')
 const req = require('express/lib/request')
 const app = express()
+var morgan = require('morgan')
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let date_time = new Date()
 
@@ -38,7 +40,6 @@ const generateId = () => {
 
   return maxId + 1
 }
-/*********************************/
 
 app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
@@ -71,7 +72,6 @@ app.post('api/persons', (request, response) => {
 
   response.json(person)
 })
-/*********************************/
 
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -91,6 +91,14 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
+/************ Unknown Endpoint **********/
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+/********* Listen ********/
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
